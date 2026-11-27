@@ -1,0 +1,46 @@
+// package.json:  { "name": "capstone-devops-app", "version": "1.0.0",
+//                  "scripts": { "test": "node --test" }, "dependencies": { "express": "^4.19.2" } }
+// app.js
+const express = require("express");
+const app = express();
+app.get("/", (req, res) => {
+  res.send("<h1>Capstone App Live!</h1><p>Running Version: 1.0.0</p>");
+});
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "UP", version: "1.0.0" });
+});
+if (require.main === module) {
+  app.listen(3000, () => console.log("App running on port 3000"));
+}
+module.exports = app;
+// app.test.js
+const test = require("node:test"); const assert = require("node:assert");
+const app = require("./app");
+test("app exports express server", () => assert.ok(app));
+
+
+
+
+# 1. Start the capstone app (version 1.0.0)
+docker run -d --name capstone-live -p 3000:3000 ghcr.io/sundarkandasamy01/fulldevops01:latest
+ 
+# 2. Start Watchtower: watch only 'capstone-live', check every 30 seconds
+docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock `
+  containrrr/watchtower capstone-live --interval 30
+ 
+#2 new one:
+#sundar : above #2 is not working as we have to remove and use newer version with below command
+
+docker rm watchtower
+
+docker run -d --name watchtower `
+  -e DOCKER_API_VERSION=1.44 `
+  -v /var/run/docker.sock:/var/run/docker.sock `
+  containrrr/watchtower capstone-live --interval 30
+
+
+# 3. Verify
+docker ps
+docker logs watchtower
+
+

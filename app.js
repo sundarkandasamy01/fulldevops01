@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("<h1>Capstone App Live!</h1><p>Running Version: 1.0.0</p>");
+  res.send("<h1>Capstone App Live, 2nd Version Live Now !</h1><p>Running Version: 2.0.0</p>");
 });
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "UP", version: "1.0.0" });
